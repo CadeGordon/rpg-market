@@ -12,16 +12,14 @@ namespace rpg_market
             public int Cost;
         }
 
-    class Game
+    class Game : Player
     {
         private Shop _shop;
         private Player _player;
         private bool _gameOver;
         private Scene _currentScene;
-        private Item[] _shopInventory;
-        private Item[] _inventory;
         private Item[] _shopItems;
-        private int _inventoryIndex;
+        
         
         public enum Scene
         {
@@ -40,14 +38,16 @@ namespace rpg_market
             FLIMSEYSWORD,
             MEGAPOTION
         }
-        
-
-       
-        
 
 
 
 
+
+
+
+        /// <summary>
+        /// Function that starts the main game loop
+        /// </summary>
         public void Run()
         {
             Start();
@@ -60,6 +60,9 @@ namespace rpg_market
             End();
         }
 
+        /// <summary>
+        ///  Function used to initialize any starting values by default
+        /// </summary>
         private void Start()
         {
             _gameOver = false;
@@ -102,15 +105,17 @@ namespace rpg_market
 
         }
 
-       
-        
 
-            
-        
+
+
+
+
 
         //Load function will go here
 
-
+        /// <summary>
+        /// Calls the appropriate function(s) based on the current scene index
+        /// </summary>
         private void DisplayCurrentScene()
         {
             switch (_currentScene)
@@ -124,15 +129,16 @@ namespace rpg_market
             }
         }
 
-
+        //Dispays the opening menu of the application
         private void DisplayOpeningMenu()
         {
             int choice = GetInput("Welcome to the Black Market! Would you like to enter?", "Yes", "No");
-
+            //if first option is chosen move on to the next scene the shop
             if (choice == 0)
             {
                 _currentScene = Scene.SHOPMENU;
             }
+            //if first option is not chosen close the application
             else if (choice == 1)
             {
                 _gameOver = true;
@@ -141,9 +147,23 @@ namespace rpg_market
 
         private void DisplayShopMenu()
         {
-           int choice = GetInput("Welcome to the black market what would you like to buy?")
+            Console.WriteLine("Your Gold: " + GetGold());
+            Console.WriteLine("Your inventory: ");
 
-            
+
+            int choice = GetInput("\n\nWelcome to the black market what would you like to buy?", GetShopMenuOptions()); 
+
+            switch (choice)
+            {
+
+                case 9:
+                    _gameOver = true;
+                    break;
+
+
+
+
+            }
             
 
             
@@ -157,7 +177,8 @@ namespace rpg_market
             
         }
 
-        private void GetShopMenuOptions()
+        //Function that gets the array of initialized shop items and prints them out for the player to see
+        private string[] GetShopMenuOptions()
         {
             
             
@@ -172,17 +193,17 @@ namespace rpg_market
             }
 
             //Set the last index to be the new item
-            tempArray[_shopItems.Length] = "save";
-            tempArray[_shopItems.Length + 1] = "quit";
+            tempArray[_shopItems.Length] = "Save";
+            tempArray[_shopItems.Length + 1] = "Quit";
 
-            
+            return tempArray;
             
         }
 
 
        
 
-
+        //function to be called when the players is needed to make a choice
         int GetInput(string description, params string[] options)
         {
             string input = "";
@@ -215,7 +236,7 @@ namespace rpg_market
                         Console.ReadKey(true);
                     }
                 }
-                //if the player didnt type and int
+                //if the player didnt type an int
                 else
                 {
                     //Set input recieved to be the default value
